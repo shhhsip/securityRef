@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cos.security1.config.auth.PrincipalDetails;
+import com.cos.security1.config.oauth.PrincipalDetails;
 import com.cos.security1.model.User;
 import com.cos.security1.repository.UserRepository;
 

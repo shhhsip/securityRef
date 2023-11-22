@@ -1,4 +1,4 @@
-package com.cos.security1.config.auth;
+package com.cos.security1.config.oauth;
 
 import java.util.ArrayList;
 import java.util.Collection;

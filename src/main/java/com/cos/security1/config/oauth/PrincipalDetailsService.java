@@ -1,4 +1,4 @@
-package com.cos.security1.config.auth;
+package com.cos.security1.config.oauth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
