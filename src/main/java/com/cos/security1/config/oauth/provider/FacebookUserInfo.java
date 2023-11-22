@@ -30,4 +30,10 @@ public class FacebookUserInfo implements OAuth2UserInfo{
 		return (String) attributes.get("name");
 	}
 
+	@Override
+	public String getProfileImage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

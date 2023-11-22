@@ -6,4 +6,6 @@ public interface OAuth2UserInfo {
 	String getEmail();
 	String getName();
 	
+	// 네이버
+	String getProfileImage();
 }
