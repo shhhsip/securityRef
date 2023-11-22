@@ -33,15 +33,15 @@ spring:
       client:
         registration:
           google:
-            client-id: 496671845027-aq4pengm9gbfu52imi12dja09pmd3tkh.apps.googleusercontent.com
-            client-secret: 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
+            client-id: 
+            client-secret: 
             scope:
             - email
             - profile
             
           facebook:
-            client-id: 308321195352158
-            client-secret: 732794ce4ceb0654ebfb4200df4b7abe
+            client-id: 
+            client-secret: 
             scope:
             - email
             - public_profile
