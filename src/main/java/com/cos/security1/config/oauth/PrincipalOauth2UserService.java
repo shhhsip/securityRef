@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.cos.security1.config.oauth.provider.FacebookUserInfo;
 import com.cos.security1.config.oauth.provider.GoogleUserInfo;
+import com.cos.security1.config.oauth.provider.KakaoUserInfo;
 import com.cos.security1.config.oauth.provider.NaverUserInfo;
 import com.cos.security1.config.oauth.provider.OAuth2UserInfo;
 import com.cos.security1.model.User;
@@ -86,6 +87,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService{
 		}else if(clientName.equals("naver")) {
 			// {resultcode=00, message=success, response={id=아이디, email=이메일, name=이름이름}} 형식이기 때문에 response를 전달
 			returnUserInfo = new NaverUserInfo((Map)oauth2User.getAttributes().get("response"));
+		}else if(clientName.equals("kakao")) {
+			/*
+			 * 사업자번호없이 제공되는 데이터의 한계가 있어 데이터 넘어오는 것 까지만 확인.
+			 */
+			returnUserInfo = new KakaoUserInfo((Map)oauth2User.getAttributes().get("properties"));
 		}else {
 			log.info("SNS 로그인 setUserInfo() 이상 ");
 		}
