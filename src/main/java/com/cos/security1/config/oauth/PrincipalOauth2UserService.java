@@ -8,6 +8,9 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import com.cos.security1.config.oauth.provider.FacebookUserInfo;
+import com.cos.security1.config.oauth.provider.GoogleUserInfo;
+import com.cos.security1.config.oauth.provider.OAuth2UserInfo;
 import com.cos.security1.model.User;
 import com.cos.security1.repository.UserRepository;
 
@@ -43,11 +46,14 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService{
 		 * userRequest 정보 -> 회원프로필 get (loadUser)
 		 */
 		log.info("getAttributes : {}", oAuth2User.getAttributes());
+		log.info("userRequest : {}", userRequest.getClientRegistration());
 		
-		String provider = userRequest.getClientRegistration().getClientName();
-		String providerId = oAuth2User.getAttribute("sub");
+		OAuth2UserInfo userInfo = setUserInfo(userRequest.getClientRegistration().getRegistrationId(), oAuth2User);
+		
+		String provider = userInfo.getProvider();
+		String providerId = userInfo.getProviderId();
 		String username = provider+"_"+providerId; // google_29382481oi24~~~
-		String email = oAuth2User.getAttribute("email");
+		String email = userInfo.getEmail();
 		String password = bCryptPasswordEncoder.encode("SNS로그인");
 		String role = "ROLE_USER";
 		
@@ -67,5 +73,17 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService{
 		return new PrincipalDetails(userEntity, oAuth2User.getAttributes());
 	}
 
+	
+	public OAuth2UserInfo setUserInfo(String clientName, OAuth2User oauth2User) {
+		OAuth2UserInfo returnUserInfo = null;
+		if(clientName.equals("google")) {
+			returnUserInfo = new GoogleUserInfo(oauth2User.getAttributes());
+		}else if(clientName.equals("facebook")) {
+			returnUserInfo = new FacebookUserInfo(oauth2User.getAttributes());
+		}else {
+			log.info("SNS 로그인 setUserInfo() 이상 ");
+		}
+		return returnUserInfo;
+	}
 
 }
