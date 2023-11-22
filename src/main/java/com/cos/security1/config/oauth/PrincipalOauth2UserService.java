@@ -1,5 +1,7 @@
 package com.cos.security1.config.oauth;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.cos.security1.config.oauth.provider.FacebookUserInfo;
 import com.cos.security1.config.oauth.provider.GoogleUserInfo;
+import com.cos.security1.config.oauth.provider.NaverUserInfo;
 import com.cos.security1.config.oauth.provider.OAuth2UserInfo;
 import com.cos.security1.model.User;
 import com.cos.security1.repository.UserRepository;
@@ -49,7 +52,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService{
 		log.info("userRequest : {}", userRequest.getClientRegistration());
 		
 		OAuth2UserInfo userInfo = setUserInfo(userRequest.getClientRegistration().getRegistrationId(), oAuth2User);
-		
+
 		String provider = userInfo.getProvider();
 		String providerId = userInfo.getProviderId();
 		String username = provider+"_"+providerId; // google_29382481oi24~~~
@@ -80,6 +83,9 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService{
 			returnUserInfo = new GoogleUserInfo(oauth2User.getAttributes());
 		}else if(clientName.equals("facebook")) {
 			returnUserInfo = new FacebookUserInfo(oauth2User.getAttributes());
+		}else if(clientName.equals("naver")) {
+			// {resultcode=00, message=success, response={id=아이디, email=이메일, name=이름이름}} 형식이기 때문에 response를 전달
+			returnUserInfo = new NaverUserInfo((Map)oauth2User.getAttributes().get("response"));
 		}else {
 			log.info("SNS 로그인 setUserInfo() 이상 ");
 		}
