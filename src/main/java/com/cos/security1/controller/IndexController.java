@@ -3,17 +3,25 @@ package com.cos.security1.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cos.security1.config.auth.PrincipalDetails;
 import com.cos.security1.model.User;
 import com.cos.security1.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
+@Slf4j
 public class IndexController {
 	
 	@Autowired
@@ -22,7 +30,32 @@ public class IndexController {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
+	@GetMapping("/test/login")
+	public @ResponseBody String loginTest(Authentication authentication, @AuthenticationPrincipal PrincipalDetails userDetails) {
+		String result = "세션 정보 확인 하기 <br />";
+		
+		result += "authentication = " + authentication.getPrincipal();
+		
+		PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
+		System.out.println("userDetails :" + userDetails.getUsername());
+		
+		return result;
+	}
 	
+	@GetMapping("/test/oauth/login")
+	public @ResponseBody String loginOauthTest(Authentication authentication
+			,@AuthenticationPrincipal OAuth2User oauth) {
+		String result = "세션 정보 확인 하기 <br />";
+		
+		result += "authentication = " + authentication.getPrincipal();
+		
+		OAuth2User auth2User = (OAuth2User)authentication.getPrincipal();
+		log.info("authentication : {}",auth2User.getAttributes());
+		log.info("oauth : {}",oauth.getAttributes());
+		
+		
+		return result;
+	}
 
 	@GetMapping({"","/"})
 	public String index() {
@@ -32,8 +65,10 @@ public class IndexController {
 		return "index";
 	}
 	
+
 	@GetMapping("/user")
-	public String user() {
+	public String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		log.info("principalDetails.getUser() = {}",principalDetails.getUser());
 		return "user";
 	}
 	
